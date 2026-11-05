@@ -1,10 +1,10 @@
 ---
 name: fredgao-text-to-speech
-description: 把英文文本转成朗读 mp3，音色可选（14 种口音、45 个音色，覆盖英音/美音/澳音/加音/爱尔兰/印度/新西兰/南非/新加坡/中国香港/菲律宾/肯尼亚/尼日利亚/坦桑尼亚），带试听页让用户先挑音色再配音。中文别名"转语音 / 文本转语音 / 配音 / 朗读 / 读一遍 / 念一下 / TTS / 给我读 / 音色 / 英音 / 美音 / 换个声音 / 换个人声 / 男声 / 女声 / 口音"。当用户说"把这段转成语音""读出来听听""用英音读""换个男声""有什么音色"时使用。引擎 Microsoft Edge TTS，免费无需密钥；长文本自动分块拼接；可顺手生成单文件 HTML 播放页。 | 作者：Fred老师 | 公众号：佛瑞德英语教学
+description: 把文本（含中文）转成朗读 mp3，音色可选（18 种口音、59 个音色，覆盖英音/美音/澳音/加音/爱尔兰/印度/新西兰/南非/新加坡/中国香港/菲律宾/肯尼亚/尼日利亚/坦桑尼亚/中文普通话/粤语/台湾/方言），带试听页让用户先挑音色再配音。中文别名"转语音 / 文本转语音 / 配音 / 朗读 / 读一遍 / 念一下 / TTS / 给我读 / 音色 / 英音 / 美音 / 换个声音 / 换个人声 / 男声 / 女声 / 口音 / 中文 / 普通话 / 粤语"。当用户说"把这段转成语音""读出来听听""用英音读""换个男声""有什么音色""用中文读""读中文"时使用。引擎 Microsoft Edge TTS，免费无需密钥；支持中文（普通话/粤语/台湾/方言）；长文本自动分块拼接；可顺手生成单文件 HTML 播放页。 | 作者：Fred老师 | 公众号：佛瑞德英语教学
 agent_created: true
 ---
 
-# text-to-speech（文本 → 朗读 mp3，音色可选）
+# text-to-speech（文本 → 朗读 mp3，音色可选，含中文）
 
 ## 环境（本机已就绪）
 
@@ -66,10 +66,15 @@ $PY ~/.workbuddy/skills/fredgao-text-to-speech/scripts/check_voices.py          
    用 `present_files` 打开，然后说一句"点卡片试听，告诉我要哪个"。
 2. **用户回话后直接配**：认四种说法——
    - 别名：`aria`、`sonia`、`ryan`、`neerja-x`
-   - 序号：`44`（对应 `--list` 里的编号，1–45）
+   - 序号：`59`（对应 `--list` 里的编号，1–59）
    - 描述：`英音男声` → `--accent gb --gender m`；`港式英语` → `--accent hk`
    - 只要名字：`aria`、`sonia`（自动匹配到完整音色名）
 3. 用户说"就这个""随便"→ 用 `aria`（美音女声，最接近高考听力）并说明一声。
+
+**中文音色**：不用别名表里那套英文口音，直接按完整名或拼音名调用——
+`--voice xiaoxiao`（晓晓，普通话女，最自然全能）或 `--voice zh-CN-XiaoxiaoNeural`（完整名）；
+按口音筛中文：`--accent zh`（普通话）/ `--accent yue`（粤语）/ `--accent tw`（台湾）/ `--accent dialect`（方言）。
+中文朗读同样支持长文分块、慢速、生成 HTML 播放页。
 
 选完可以顺手记一句到用户级 MEMORY：`配音默认音色：<别名>`，下次不用再问。
 
@@ -88,7 +93,7 @@ $PY $S --list --all                # 直接读 edge-tts 原始清单（无中文
 # 文本 → mp3
 $PY $S -t "英文段落..." -o out.mp3 --voice aria
 $PY $S passage.txt -o out.mp3 --accent gb --gender m     # 英音男声（→ ryan）
-$PY $S passage.docx -o out.mp3 --voice 44                # 按序号（44 → imani）
+$PY $S passage.docx -o out.mp3 --voice 46                # 按序号（46 → 晓晓 中文女声）
 $PY $S passage.txt --speed slow                          # 慢速 -15%
 
 # 顺手出单文件 HTML 播放页（1.0/0.85/0.7 倍速 + 进度条）
@@ -104,7 +109,7 @@ $PY $S --check --accent gb          # 只查英音
 | 参数 | 说明 |
 |---|---|
 | `--voice` | 别名 / 完整名 / 序号（1–45） |
-| `--accent` | us gb au ca ie in nz za sg hk ph ke ng tz（也认 uk、英音、美音、英式） |
+| `--accent` | us gb au ca ie in nz za sg hk ph ke ng tz zh yue tw dialect（也认 uk、英音、美音、英式、中文、普通话、粤语、台湾） |
 | `--gender` | f / m（也认 女 / 男 / 女声 / 男声） |
 | `--speed` | slower(-25%) slow(-15%) normal fast(+10%) faster(+20%) |
 | `--rate` | 原始值，**必须等号形式** `--rate=-15%` |
@@ -115,11 +120,11 @@ $PY $S --check --accent gb          # 只查英音
 
 输入支持 `-t` 直接给文本、`.txt` / `.md` / `.docx`（docx 会连表格一起读）。旧版 `.doc` 要先另存为 docx。
 
-> 最近一次全量音色自检：**2026-10-28T18:08:29+08:00**（`python scripts/check_voices.py`）
+> 最近一次全量音色自检：**2026-11-05T09:32:01+08:00**（`python scripts/check_voices.py`）
 
-## 音色一览（45 个，全部实测可发声）
+## 音色一览（59 个，全部实测可发声）
 
-`--list` 按口音分组打印，序号连续 1–45，`--voice N` 直接用序号。
+`--list` 按口音分组打印，序号连续 1–59，`--voice N` 直接用序号。
 
 | 口音 | 女声 | 男声 |
 |---|---|---|
@@ -137,11 +142,20 @@ $PY $S --check --accent gb          # 只查英音
 | 肯尼亚 KE (2) | asilia | chilemba |
 | 尼日利亚 NG (2) | ezinne | abeo |
 | 坦桑尼亚 TZ (2) | imani | elimu |
+| 中文普通话 ZH (6) | xiaoxiao（最自然全能）、xiaoyi（活泼） | yunjian（热情）、yunxi（阳光）、yunxia（卡通）、yunyang（新闻腔） |
+| 中文方言 (2) | liaobei（辽宁·幽默）、xiaoni（陕西·明亮） | — |
+| 粤语 YUE (3) | hiugaai、hiumaan | wanlung |
+| 台湾 TW (3) | hsiaochen、hsiaoyu | yunjhe |
 
-**为什么是 45 而不是 edge-tts 列出的 47**：`en-ZA-LeahNeural`（南非女）和
-`en-SG-WayneNeural`（新加坡男）在免费端点上始终返回 `NoAudioReceived`——`--list-voices`
-能列出但发不出声，重试 3 次均失败，同组的 luke / luna 正常。这两个已从 `VOICES` 移除，
-**所以南非只剩男声、新加坡只剩女声**。以后若微软修好，把两条补回 `VOICES` 表即可（文件内有注释）。
+> 中文音色用法：`--voice xiaoxiao`（晓晓，普通话女，最自然）或 `--voice zh-CN-XiaoxiaoNeural`（完整名）；
+> 按口音筛中文：`--accent zh`（普通话）/ `--accent yue`（粤语）/ `--accent tw`（台湾）/ `--accent dialect`（方言）。
+> 中文朗读同样支持长文分块、慢速、生成 HTML 播放页。
+
+**为什么是 59 而不是 edge-tts 列出的更多**：底层 Edge TTS 有 100+ 音色，本技能只收录
+实测可用的 59 个。其中英语 45 个——`en-ZA-LeahNeural`（南非女）和 `en-SG-WayneNeural`
+（新加坡男）在免费端点上始终返回 `NoAudioReceived`，已剔除（南非只剩男声、新加坡只剩女声）；
+另有 14 个中文音色（普通话 6 + 方言 2 + 粤语 3 + 台湾 3）。以后微软修复或新增，按 `tts.py`
+的 `VOICES` 表注释补回即可。
 
 **`-ml` 结尾**是同一说话人的 Multilingual 模型版，纯英文朗读与普通版差别很细微，
 除非要读中英混排，否则用普通版即可。

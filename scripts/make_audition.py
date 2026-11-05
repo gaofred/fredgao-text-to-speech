@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""生成音色试听页：把全部英语音色的同一句样音嵌进单文件 HTML。
+"""生成音色试听页：把全部音色（含中文）的同一句样音嵌进单文件 HTML。
 
 用法:
   python make_audition.py            # 生成 assets/voices.html（已有样音直接复用）
   python make_audition.py --refresh  # 强制重新合成全部样音
-  python make_audition.py --refresh aria sonia   # 只重合指定的
+  python make_audition.py --refresh aria sonia xiaoxiao   # 只重合指定的
 
 样音缓存在 assets/samples/<别名>.mp3，删掉某个文件即可单独重生成。
+英文音色用英文样句；中文/粤语/台湾音色用中文样句（口音差异由音色本身体现）。
 """
 import argparse
 import asyncio
@@ -29,6 +30,12 @@ SAMPLES = os.path.join(ASSETS, "samples")
 # 这句同时含 /ɑː/ vs /æ/、词尾 -er、t 的闪音，口音差别听得出来
 SAMPLE = ("Could you pass me the glass of water? "
           "I'd rather sit here and read a little longer.")
+
+# 中文音色（普通话/粤语/台湾/方言）用的样句，含声调与停顿变化，听感差异明显
+SAMPLE_ZH = "今天天气真好，我们一起朗读这篇课文，注意声调和停顿。"
+
+# 哪些口音用中文样句（其余用英文样句）
+ZH_ACCENTS = ("zh", "yue", "tw", "dialect")
 
 CARD = """
 <article class="card" data-accent="{acc}" data-alias="{alias}" data-sex="{sex}">
@@ -53,14 +60,15 @@ async def synth_all(force=False, only=None):
             continue
         out = os.path.join(SAMPLES, alias + ".mp3")
         if force or not os.path.exists(out) or os.path.getsize(out) < 2000:
-            todo.append((full, alias, out))
+            todo.append((full, alias, out, acc))
 
     if todo:
         print(f"合成样音 {len(todo)} 条 ...")
-        for i, (full, alias, out) in enumerate(todo, 1):
+        for i, (full, alias, out, acc) in enumerate(todo, 1):
+            text = SAMPLE_ZH if acc in ZH_ACCENTS else SAMPLE
             for attempt in range(3):
                 try:
-                    await edge_tts.Communicate(SAMPLE, full).save(out)
+                    await edge_tts.Communicate(text, full).save(out)
                     if os.path.getsize(out) > 2000:
                         print(f"  [{i}/{len(todo)}] {alias}")
                     break
@@ -142,7 +150,7 @@ def build_html(samples):
     html = f"""<!DOCTYPE html>
 <html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>音色试听 · {NV} 个英语音色</title>
+<title>音色试听 · {NV} 个（含中文）</title>
 <style>
 *{{box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
 body{{margin:0;padding:32px 20px 70px;background:#f4f5f7;color:#1b1d1f;
@@ -190,12 +198,13 @@ margin:1px 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 </style></head><body>
 
 <div class="head">
-  <h1>英语音色试听 · {NV} 个</h1>
-  <div class="sub">同一句话，全部音色横向对比。点卡片任意位置播放；按口音筛选；可全部连播。</div>
+  <h1>音色试听 · {NV} 个（含中文普通话/粤语/台湾）</h1>
+  <div class="sub">英文音色读英文句，中文/粤语/台湾音色读中文句，同一音色横向对比。点卡片任意位置播放；按口音筛选；可全部连播。</div>
   <div class="stamp">{STAMP}</div>
 </div>
 
-<div class="sample"><b>试听文本</b>{SAMPLE}</div>
+<div class="sample"><b>英文试听文本</b>{SAMPLE}</div>
+<div class="sample"><b>中文试听文本</b>{SAMPLE_ZH}</div>
 
 <div class="filters">
   <button data-f="all" class="on">全部 {NV}</button>

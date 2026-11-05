@@ -102,6 +102,24 @@ VOICES = [
     # ---- 坦桑尼亚 TZ (2) ----
     ("en-TZ-ImaniNeural", "imani", "伊曼妮", "tz", "f", "坦桑尼亚口音女声"),
     ("en-TZ-ElimuNeural", "elimu", "埃利穆", "tz", "m", "坦桑尼亚口音男声"),
+    # ---- 中文普通话 ZH (6) ----
+    ("zh-CN-XiaoxiaoNeural", "xiaoxiao", "晓晓", "zh", "f", "最自然全能，新闻/小说/通用首选"),
+    ("zh-CN-XiaoyiNeural", "xiaoyi", "小艺", "zh", "f", "活泼，适合小说/卡通"),
+    ("zh-CN-YunjianNeural", "yunjian", "云健", "zh", "m", "热情，适合运动/励志"),
+    ("zh-CN-YunxiNeural", "yunxi", "云希", "zh", "m", "阳光活泼"),
+    ("zh-CN-YunxiaNeural", "yunxia", "云夏", "zh", "m", "卡通可爱"),
+    ("zh-CN-YunyangNeural", "yunyang", "云扬", "zh", "m", "新闻专业、可靠，像新闻播报"),
+    # ---- 中文方言 (2) ----
+    ("zh-CN-liaoning-XiaobeiNeural", "liaobei", "小北(辽)", "dialect", "f", "辽宁方言，幽默"),
+    ("zh-CN-shaanxi-XiaoniNeural", "xiaoni", "小妮(陕)", "dialect", "f", "陕西方言，明亮"),
+    # ---- 粤语 YUE (3) ----
+    ("zh-HK-HiuGaaiNeural", "hiugaai", "晓佳(粤)", "yue", "f", "粤语女声，友好"),
+    ("zh-HK-HiuMaanNeural", "hiumaan", "晓敏(粤)", "yue", "f", "粤语女声，友好"),
+    ("zh-HK-WanLungNeural", "wanlung", "云龙(粤)", "yue", "m", "粤语男声"),
+    # ---- 台湾 TW (3) ----
+    ("zh-TW-HsiaoChenNeural", "hsiaochen", "筱珍(台)", "tw", "f", "台湾腔女声，友好"),
+    ("zh-TW-HsiaoYuNeural", "hsiaoyu", "筱瑜(台)", "tw", "f", "台湾腔女声，友好"),
+    ("zh-TW-YunJheNeural", "yunjhe", "云哲(台)", "tw", "m", "台湾腔男声"),
 ]
 
 ACCENT_CN = {
@@ -109,9 +127,10 @@ ACCENT_CN = {
     "ie": "爱尔兰 IE", "in": "印度 IN", "nz": "新西兰 NZ", "za": "南非 ZA",
     "sg": "新加坡 SG", "hk": "中国香港 HK", "ke": "肯尼亚 KE", "ng": "尼日利亚 NG",
     "ph": "菲律宾 PH", "tz": "坦桑尼亚 TZ",
+    "zh": "中文普通话 ZH", "yue": "粤语 YUE", "tw": "台湾 TW", "dialect": "中文方言",
 }
 # 试听页筛选条只放这几个常用口音，其余归入「其他」
-MAIN_ACCENTS = ["us", "gb", "au", "ca", "ie", "in"]
+MAIN_ACCENTS = ["us", "gb", "au", "ca", "ie", "in", "zh"]
 
 # 2026-10-28 实测：edge-tts 的 --list-voices 列出 47 个英语音色，但其中
 # en-ZA-LeahNeural / en-SG-WayneNeural 在免费端点上始终返回 NoAudioReceived（重试 3 次均失败，
